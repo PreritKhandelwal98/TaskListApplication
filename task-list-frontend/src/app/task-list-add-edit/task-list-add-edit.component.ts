@@ -23,10 +23,11 @@ export class TaskListAddEditComponent implements OnInit {
     this.taskForm = this._fb.group({
       entity_name: '',
       date: '',
-      time: '',
+      task_time: '',
       task_type: '',
       contact_number: '',
-      contact_person: ''
+      contact_person: '',
+      notes:''
     });
   }
 
@@ -36,10 +37,29 @@ export class TaskListAddEditComponent implements OnInit {
     }
   }
 
+  onDateChange(event: any) {
+    // Extract the date part from the event value (assuming event.value is a Date object)
+    const selectedDate: Date = event.value;
+  
+    // Create a new Date object with the date part only (time set to midnight)
+    const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+  
+    // Format the newDate to YYYY-MM-DD format (as a string)
+    const formattedDate: string = newDate.toISOString().split('T')[0];
+  
+    // Update the form control with the formatted date
+    this.taskForm.patchValue({
+      date: formattedDate
+    });
+  }
+  
+  
+
   onFormSubmit() {
     if (this.taskForm.valid) {
       const formData = this.taskForm.value;
-
+      console.log(formData);
+      
       if (this.data) {
         // Update existing task
         this._taskService.updateTask(this.data.id!.toString(), formData).subscribe({

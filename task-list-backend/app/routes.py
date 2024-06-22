@@ -22,13 +22,14 @@ def register_routes(app):
             return jsonify({'error': 'Invalid date or time format'}), 400
 
         task = {
-            'date': date.isoformat(),  # Store date as ISO formatted string
+            'date': data['date'],  # Store date as ISO formatted string
             'entity_name': data['entity_name'],
             'task_type': data['task_type'],
-            'task_time': task_time.isoformat(),  # Store time as ISO formatted string
+            'task_time': data['task_time'],  # Store time as ISO formatted string
             'contact_person': data['contact_person'],
-            'note': data.get('note'),
+            'note': data.get('notes'),
             'status': 'open',  # Set status to 'open' by default
+            'contact_number':data['contact_number']
         }
 
         mongo.db.tasks.insert_one(task)

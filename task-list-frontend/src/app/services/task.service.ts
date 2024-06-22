@@ -25,11 +25,14 @@ export class TaskService {
     return this.http.get<Task[]>(this.apiUrl);
   }
 
-  createTask(task: Task): Observable<Task> {
+  createTask(task: Task): Observable<Task> {  
+    console.log("data hu mai:",task);
+      
     return this.http.post<Task>(this.apiUrl, task);
   }
 
   updateTask(taskId: string, updates: Partial<Task>): Observable<Task> {
+    console.log("id is trapped: ",taskId);
     const url = `${this.apiUrl}/${taskId}`;
     return this.http.put<Task>(url, updates);
   }

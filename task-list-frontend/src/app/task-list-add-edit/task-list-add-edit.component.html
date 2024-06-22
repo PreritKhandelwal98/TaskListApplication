@@ -14,10 +14,11 @@
         <div class="row">
             <mat-form-field appearance="outline" class="half-width">
                 <mat-label>Date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="date">
+                <input matInput [matDatepicker]="picker" formControlName="date" (dateChange)="onDateChange($event)">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
+
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Time</mat-label>
@@ -43,6 +44,13 @@
             <mat-form-field appearance="outline" class="half-width">
                 <mat-label>Contact Person</mat-label>
                 <input matInput type="text" placeholder="Enter contact person" formControlName="contact_person">
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Notes</mat-label>
+                <textarea matInput placeholder="Enter notes" formControlName="notes"></textarea>
             </mat-form-field>
         </div>
     </div>
