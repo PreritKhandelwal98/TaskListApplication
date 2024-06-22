@@ -1,0 +1,35 @@
+.example-spacer {
+    flex: 1 1 auto;
+  }
+  
+  .main-body {
+    padding-top: 20px;
+    margin: 0 auto;
+    max-width: 1348px;
+    mat-form-field {
+      width: 100%;
+    }
+  }
+  
+  .action {
+    display: flex;
+    gap: 5px;
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .header-text {
+    flex-grow: 1;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  button {
+    margin-left: 20px;
+  }
+  
+  

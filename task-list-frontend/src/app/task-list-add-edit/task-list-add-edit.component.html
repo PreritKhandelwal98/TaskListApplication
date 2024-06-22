@@ -1,0 +1,54 @@
+<div mat-dialog-title>
+    <h1>{{ data ? 'Edit Task' : 'New Task' }}</h1>
+</div>
+
+<form [formGroup]="taskForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Entity Name</mat-label>
+                <input matInput type="text" placeholder="Enter entity name" formControlName="entity_name">
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Time</mat-label>
+                <input matInput type="text" placeholder="Enter entity name" formControlName="task_time">
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Task Type</mat-label>
+                <mat-select formControlName="task_type">
+                    <mat-option *ngFor="let type of taskTypes" [value]="type">{{ type }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Contact Number</mat-label>
+                <input matInput type="text" placeholder="Enter contact number" formControlName="contact_number">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Contact Person</mat-label>
+                <input matInput type="text" placeholder="Enter contact person" formControlName="contact_person">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+        <button mat-raised-button color="primary" type="submit">{{ data ? 'Update' : 'Save' }}</button>
+    </div>
+</form>
