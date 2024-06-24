@@ -17,9 +17,12 @@ def register_routes(app):
         # Validate and parse date and task_time
         try:
             date = datetime.strptime(data['date'], '%Y-%m-%d').date()
-            task_time = datetime.strptime(data['task_time'], '%H:%M').time()
         except ValueError as e:
-            return jsonify({'error': 'Invalid date or time format'}), 400
+            return jsonify({'error': 'Invalid date Format'}),400
+        try:
+            task_time = datetime.strptime(data['task_time'], '%I:%M %p').time().strftime('%I:IM %p')
+        except ValueError as e:
+            return jsonify({'error': 'Invalid time format'}), 400
 
         task = {
             'date': data['date'],  # Store date as ISO formatted string
@@ -56,17 +59,19 @@ def register_routes(app):
         if 'task_type' in data and data['task_type'] not in ['meeting', 'call', 'video call']:
             return jsonify({'error': 'Invalid task type. Must be "meeting", "call", or "video call"'}), 400
 
-        # Validate and parse date and task_time if provided
+        # Validate and parse date if provided
         if 'date' in data:
             try:
                 data['date'] = datetime.strptime(data['date'], '%Y-%m-%d').date().isoformat()
             except ValueError as e:
                 return jsonify({'error': 'Invalid date format'}), 400
+
+    # Validate and parse task_time with AM/PM if provided
         if 'task_time' in data:
             try:
-                data['task_time'] = datetime.strptime(data['task_time'], '%H:%M').time().isoformat()
+                data['task_time'] = datetime.strptime(data['task_time'], '%I:%M %p').time().strftime('%I:%M %p')
             except ValueError as e:
-                return jsonify({'error': 'Invalid time format'}), 400
+                return jsonify({'error': 'Invalid time format. Must be in HH:MM AM/PM format'}), 400
 
         mongo.db.tasks.update_one(
             {'_id': ObjectId(task_id)},

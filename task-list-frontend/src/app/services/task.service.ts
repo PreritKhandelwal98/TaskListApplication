@@ -25,18 +25,13 @@ export class TaskService {
     return this.http.get<Task[]>(this.apiUrl);
   }
 
-  createTask(task: Task): Observable<Task> {  
-    console.log("data hu mai:",task);
-      
+  createTask(task: Task): Observable<Task> {        
     return this.http.post<Task>(this.apiUrl, task);
   }
 
   updateTask(taskId: string, updates: Partial<Task>): Observable<Task> {
-    console.log("correvtly working 1");
     const url = `${this.apiUrl}/${taskId}`;
-    console.log("correvtly working 2");
     return this.http.put<Task>(url, updates);
-    
   }
 
   deleteTask(taskId: string): Observable<void> {

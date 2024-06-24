@@ -12,7 +12,6 @@ import { TaskService, Task } from '../services/task.service';
 export class TaskListAddEditComponent implements OnInit {
   taskForm: FormGroup;
   taskTypes: string[] = ['call', 'video call', 'meeting'];
-  ampmOptions: string[] = ['AM', 'PM'];
   constructor(
     private _fb: FormBuilder,
     private _taskService: TaskService,
@@ -27,7 +26,8 @@ export class TaskListAddEditComponent implements OnInit {
       task_type: '',
       contact_number: '',
       contact_person: '',
-      notes:''
+      notes:'',
+      ampm:''
     });
   }
 
@@ -58,31 +58,29 @@ export class TaskListAddEditComponent implements OnInit {
   setDefaultDateTime() {
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().split('T')[0];
-    const formattedTime = this.formatAMPM(currentDate); // Utilize the formatAMPM method here
-    const ampm = currentDate.getHours() >= 12 ? 'PM' : 'AM';
+    const formattedTime = this.formatAMPM(currentDate.getHours(), currentDate.getMinutes());
     this.taskForm.patchValue({
       date: formattedDate,
       task_time: formattedTime,
-      ampm: ampm
     });
   }
+  ampmOptions: string[] = ['AM', 'PM'];
 
-  formatAMPM(date: Date) {
-    let hours = date.getHours();
-    let minutes: any = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    const strTime = hours + ':' + minutes;
-    return strTime;
+  formatAMPM(hours: number, minutes: number): string {
+    const formattedHours = ('0' + (hours % 12 || 12)).slice(-2);
+    const formattedMinutes = ('0' + minutes).slice(-2);
+    return `${formattedHours}:${formattedMinutes}`;
   }
 
   onFormSubmit() {
     if (this.taskForm.valid) {
-      const formData = this.taskForm.value;
-      console.log(formData);
-      
+      let formData = { ...this.taskForm.value };
+  
+      // Format task_time if necessary (ensure it aligns with backend expectations)
+      formData.task_time = `${formData.task_time} ${formData.ampm}`;  
+      // Append ampm to formData
+      formData.ampm = formData.ampm || ''; // Ensure ampm is defined
+  
       if (this.data) {
         // Update existing task
         this._taskService.updateTask(this.data._id!.toString(), formData).subscribe({
@@ -107,5 +105,19 @@ export class TaskListAddEditComponent implements OnInit {
         });
       }
     }
+  }
+  
+
+  formatTimeTo24Hour(time: string): string {
+    const [timePart, period] = time.split(' ');
+    let [hours, minutes] = timePart.split(':').map(Number);
+
+    if (period === 'PM' && hours < 12) {
+      hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+
+    return `${('0' + hours).slice(-2)}:${('0' + minutes).slice(-2)}`;
   }
 }
