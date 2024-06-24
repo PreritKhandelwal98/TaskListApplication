@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CoreService } from '../core/core.service';
 import { TaskService, Task } from '../services/task.service';
+import { TASK_TYPE_ICONS, TaskTypeIcons } from '../constants'; // Import task type icons and interface
 
 @Component({
   selector: 'app-task-list-add-edit',
@@ -12,6 +13,8 @@ import { TaskService, Task } from '../services/task.service';
 export class TaskListAddEditComponent implements OnInit {
   taskForm: FormGroup;
   taskTypes: string[] = ['call', 'video call', 'meeting'];
+  taskTypeIcons: TaskTypeIcons = TASK_TYPE_ICONS; // Use the interface for type safety
+
   constructor(
     private _fb: FormBuilder,
     private _taskService: TaskService,
@@ -53,6 +56,11 @@ export class TaskListAddEditComponent implements OnInit {
     this.taskForm.patchValue({
       date: formattedDate
     });
+  }
+
+  getTaskTypeIcon(taskType: string): string {
+    const lowerCaseTaskType = taskType.toLowerCase() as keyof TaskTypeIcons;
+    return this.taskTypeIcons[lowerCaseTaskType] || '';
   }
   
   setDefaultDateTime() {

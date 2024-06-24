@@ -36,7 +36,10 @@
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Task Type</mat-label>
                 <mat-select formControlName="task_type">
-                    <mat-option *ngFor="let type of taskTypes" [value]="type">{{ type }}</mat-option>
+                    <mat-option *ngFor="let type of taskTypes" [value]="type">
+                        <mat-icon>{{ getTaskTypeIcon(type) }}</mat-icon> <!-- Use mat-icon for the icon -->
+                        {{ type }}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

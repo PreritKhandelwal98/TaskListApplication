@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { TASK_TYPE_ICONS, TaskTypeIcons } from '../constants'; // Import task type icons and interface
 
 @Component({
   selector: 'app-filter-dialog',
@@ -11,6 +12,8 @@ export class FilterDialogComponent {
   filterValue: string = '';
   date: Date | null = null;
   taskType: { call: boolean; meeting: boolean; videoCall: boolean } = { call: false, meeting: false, videoCall: false };
+  taskTypeIcons: TaskTypeIcons = TASK_TYPE_ICONS; // Use the interface for type safety
+
 
   constructor(
     public dialogRef: MatDialogRef<FilterDialogComponent>,
@@ -24,6 +27,11 @@ export class FilterDialogComponent {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  getTaskTypeIcon(taskType: string): string {
+    const lowerCaseTaskType = taskType.toLowerCase() as keyof TaskTypeIcons;
+    return this.taskTypeIcons[lowerCaseTaskType] || '';
   }
 
   onApply(): void {

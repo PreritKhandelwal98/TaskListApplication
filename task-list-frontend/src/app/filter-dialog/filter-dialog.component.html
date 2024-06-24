@@ -10,10 +10,21 @@
     </div>
 
     <div *ngIf="data.column === 'task_type'">
-        <mat-checkbox [(ngModel)]="taskType.call">Call</mat-checkbox>
-        <mat-checkbox [(ngModel)]="taskType.meeting">Meeting</mat-checkbox>
-        <mat-checkbox [(ngModel)]="taskType.videoCall">Video Call</mat-checkbox>
+        <mat-checkbox [(ngModel)]="taskType.call">
+            <mat-icon>phone</mat-icon> <!-- Icon for Call -->
+            Call
+        </mat-checkbox>
+        <mat-checkbox [(ngModel)]="taskType.meeting">
+            <mat-icon>group</mat-icon> <!-- Icon for Meeting -->
+            Meeting
+        </mat-checkbox>
+        <mat-checkbox [(ngModel)]="taskType.videoCall">
+            <mat-icon>videocam</mat-icon> <!-- Icon for Video Call -->
+            Video Call
+        </mat-checkbox>
     </div>
+
+
 
     <div *ngIf="data.column !== 'date' && data.column !== 'task_type'">
         <mat-form-field>

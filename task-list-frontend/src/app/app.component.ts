@@ -1,3 +1,4 @@
+// app.component.ts
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskListAddEditComponent } from './task-list-add-edit/task-list-add-edit.component';
@@ -6,7 +7,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CoreService } from './core/core.service';
-import { FilterDialogComponent } from './filter-dialog/filter-dialog.component'; // Import filter dialog component
+import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
+import { TASK_TYPE_ICONS, TaskTypeIcons } from './constants'; // Import task type icons and interface
 
 @Component({
   selector: 'app-root',
@@ -25,7 +27,8 @@ export class AppComponent implements OnInit {
     'action'
   ];
   dataSource!: MatTableDataSource<Task>;
-  activeFilters: { column: string, value: any }[] = []; // Active filters
+  activeFilters: { column: string, value: any }[] = [];
+  taskTypeIcons: TaskTypeIcons = TASK_TYPE_ICONS; // Use the interface for type safety
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -142,5 +145,10 @@ export class AppComponent implements OnInit {
         error: console.error
       });
     }
+  }
+
+  getTaskTypeIcon(taskType: string): string {
+    const lowerCaseTaskType = taskType.toLowerCase() as keyof TaskTypeIcons;
+    return this.taskTypeIcons[lowerCaseTaskType] || '';
   }
 }
