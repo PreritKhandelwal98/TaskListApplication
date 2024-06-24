@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 
 export interface Task {
-  id?: number; // id is optional for new tasks
+  _id?: number; // id is optional for new tasks
   date: string;
   entity_name: string;
   task_type: string;
@@ -32,9 +32,11 @@ export class TaskService {
   }
 
   updateTask(taskId: string, updates: Partial<Task>): Observable<Task> {
-    console.log("id is trapped: ",taskId);
+    console.log("correvtly working 1");
     const url = `${this.apiUrl}/${taskId}`;
+    console.log("correvtly working 2");
     return this.http.put<Task>(url, updates);
+    
   }
 
   deleteTask(taskId: string): Observable<void> {

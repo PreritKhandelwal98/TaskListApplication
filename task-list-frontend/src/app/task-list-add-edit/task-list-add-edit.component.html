@@ -19,10 +19,12 @@
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
 
-
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" class="half-width">
                 <mat-label>Time</mat-label>
-                <input matInput type="text" placeholder="Enter entity name" formControlName="task_time">
+                <input matInput type="text" placeholder="Enter time" formControlName="task_time">
+                <mat-select formControlName="ampm">
+                    <mat-option *ngFor="let option of ampmOptions" [value]="option">{{ option }}</mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
 

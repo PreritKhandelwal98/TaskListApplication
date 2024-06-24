@@ -69,18 +69,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  deleteTask(taskId: string) {
-    this._taskService.deleteTask(taskId).subscribe({
-      next: (res) => {
-        this._coreService.openSnackBar('Task deleted!', 'done');
-        this.getTaskList();
-      },
-      error: console.log,
-    });
-  }
 
   changeStatusToClose(taskId: string) {
-    this._taskService.changeTaskStatus(taskId, 'Closed').subscribe({
+    console.log("this function called");
+    
+    this._taskService.changeTaskStatus(taskId, 'closed').subscribe({
       next: (res) => {
         this._coreService.openSnackBar('Task status updated!', 'done');
         this.getTaskList();
@@ -102,4 +95,16 @@ export class AppComponent implements OnInit {
       },
     });
   }
+  deleteTask(taskId: string) {
+    if (confirm('Are you sure you want to delete this task?')) {
+      this._taskService.deleteTask(taskId).subscribe({
+        next: () => {
+          this._coreService.openSnackBar('Task deleted successfully');
+          this.getTaskList();
+        },
+        error: console.error
+      });
+    }
+  }
+
 }

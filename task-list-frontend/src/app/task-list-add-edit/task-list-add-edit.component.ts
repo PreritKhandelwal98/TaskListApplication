@@ -11,8 +11,8 @@ import { TaskService, Task } from '../services/task.service';
 })
 export class TaskListAddEditComponent implements OnInit {
   taskForm: FormGroup;
-  taskTypes: string[] = ['Call', 'Video Call', 'Meeting'];
-
+  taskTypes: string[] = ['call', 'video call', 'meeting'];
+  ampmOptions: string[] = ['AM', 'PM'];
   constructor(
     private _fb: FormBuilder,
     private _taskService: TaskService,
@@ -32,7 +32,9 @@ export class TaskListAddEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.data) {
+    if (!this.data) {
+      this.setDefaultDateTime();
+    } else {
       this.taskForm.patchValue(this.data);
     }
   }
@@ -53,7 +55,28 @@ export class TaskListAddEditComponent implements OnInit {
     });
   }
   
-  
+  setDefaultDateTime() {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().split('T')[0];
+    const formattedTime = this.formatAMPM(currentDate); // Utilize the formatAMPM method here
+    const ampm = currentDate.getHours() >= 12 ? 'PM' : 'AM';
+    this.taskForm.patchValue({
+      date: formattedDate,
+      task_time: formattedTime,
+      ampm: ampm
+    });
+  }
+
+  formatAMPM(date: Date) {
+    let hours = date.getHours();
+    let minutes: any = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    const strTime = hours + ':' + minutes;
+    return strTime;
+  }
 
   onFormSubmit() {
     if (this.taskForm.valid) {
@@ -62,7 +85,7 @@ export class TaskListAddEditComponent implements OnInit {
       
       if (this.data) {
         // Update existing task
-        this._taskService.updateTask(this.data.id!.toString(), formData).subscribe({
+        this._taskService.updateTask(this.data._id!.toString(), formData).subscribe({
           next: () => {
             this._coreService.openSnackBar('Task detail updated!');
             this._dialogRef.close(true);
