@@ -118,11 +118,27 @@ def register_routes(app):
         if 'entity_name' in query_params:
             filter_criteria['entity_name'] = query_params.get('entity_name')
 
+        # Filter by date if provided
+        if 'date' in query_params:
+            try:
+                filter_criteria['date'] = datetime.strptime(query_params['date'], '%Y-%m-%d').date().isoformat()
+            except ValueError as e:
+                return jsonify({'error': 'Invalid date format. Must be in YYYY-MM-DD format'}), 400
+
+        # Filter by task_time if provided
+        if 'task_time' in query_params:
+            try:
+                filter_criteria['task_time'] = datetime.strptime(query_params['task_time'], '%I:%M %p').time().strftime('%I:%M %p')
+            except ValueError as e:
+                return jsonify({'error': 'Invalid time format. Must be in HH:MM AM/PM format'}), 400
+
         print(f"Filtering tasks with criteria: {filter_criteria}")
         tasks = list(mongo.db.tasks.find(filter_criteria))
         for task in tasks:
             task['_id'] = str(task['_id'])
         return jsonify(tasks)
+
+
 
     @app.route('/contacts', methods=['GET'])
     def get_contacts():

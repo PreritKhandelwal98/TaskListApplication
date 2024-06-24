@@ -29,6 +29,10 @@ export class TaskService {
     return this.http.post<Task>(this.apiUrl, task);
   }
 
+  filterTasks(filterCriteria: any): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.apiUrl}/filter`, { params: filterCriteria });
+  }
+
   updateTask(taskId: string, updates: Partial<Task>): Observable<Task> {
     const url = `${this.apiUrl}/${taskId}`;
     return this.http.put<Task>(url, updates);

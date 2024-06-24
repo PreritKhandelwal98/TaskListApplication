@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CoreService } from './core/core.service';
+import { FilterDialogComponent } from './filter-dialog/filter-dialog.component'; // Import filter dialog component
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit {
     'action'
   ];
   dataSource!: MatTableDataSource<Task>;
+  activeFilters: { column: string, value: any }[] = []; // Active filters
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -69,10 +71,44 @@ export class AppComponent implements OnInit {
     }
   }
 
+  openFilterDialog(column: string): void {
+    const dialogRef = this._dialog.open(FilterDialogComponent, {
+      data: { column }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.activeFilters.push(result);
+        this.applyFilters();
+      }
+    });
+  }
+
+  applyFilters(): void {
+    const filterCriteria: any = {};
+    this.activeFilters.forEach(filter => {
+      filterCriteria[filter.column] = filter.value;
+    });
+    this._taskService.filterTasks(filterCriteria).subscribe({
+      next: (res) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      },
+      error: console.log,
+    });
+  }
+
+  removeFilter(filterToRemove: { column: string, value: any }): void {
+    this.activeFilters = this.activeFilters.filter(filter => filter !== filterToRemove);
+    if (this.activeFilters.length > 0) {
+      this.applyFilters();
+    } else {
+      this.getTaskList();
+    }
+  }
 
   changeStatusToClose(taskId: string) {
-    console.log("this function called");
-    
     this._taskService.changeTaskStatus(taskId, 'closed').subscribe({
       next: (res) => {
         this._coreService.openSnackBar('Task status updated!', 'done');
@@ -95,6 +131,7 @@ export class AppComponent implements OnInit {
       },
     });
   }
+
   deleteTask(taskId: string) {
     if (confirm('Are you sure you want to delete this task?')) {
       this._taskService.deleteTask(taskId).subscribe({
@@ -106,5 +143,4 @@ export class AppComponent implements OnInit {
       });
     }
   }
-
 }

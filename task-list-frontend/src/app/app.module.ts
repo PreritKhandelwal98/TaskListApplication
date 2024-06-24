@@ -15,16 +15,19 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule  } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 
 @NgModule({
-  declarations: [AppComponent, TaskListAddEditComponent],
+  declarations: [AppComponent, TaskListAddEditComponent, FilterDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -45,7 +48,9 @@ import { MatMenuModule  } from '@angular/material/menu';
     MatPaginatorModule,
     MatSortModule,
     MatSnackBarModule,
-    MatMenuModule
+    MatMenuModule,
+    FormsModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent],
