@@ -14,6 +14,12 @@ export interface Task {
   status: string;
 }
 
+interface GroupedTask {
+  date: string;
+  tasks: Task[];
+  openTasksCount: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -46,5 +52,10 @@ export class TaskService {
   changeTaskStatus(taskId: string, status: string): Observable<Task> {
     const url = `${this.apiUrl}/${taskId}/status`;
     return this.http.put<Task>(url, { status });
+  }
+
+  getContactPersons(): Observable<any> {
+    const url = `${this.apiUrl}/contacts`;
+    return this.http.get<any>(url);
   }
 }

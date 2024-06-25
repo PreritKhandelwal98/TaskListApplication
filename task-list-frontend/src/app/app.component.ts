@@ -1,4 +1,3 @@
-// app.component.ts
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskListAddEditComponent } from './task-list-add-edit/task-list-add-edit.component';
