@@ -83,13 +83,9 @@ export class TaskListAddEditComponent implements OnInit {
   onFormSubmit() {
     if (this.taskForm.valid) {
       let formData = { ...this.taskForm.value };
-      console.log("this is form data to append",formData);
       
       formData.task_time = `${formData.task_time} ${formData.ampm}`;  
-      console.log("this is time data to append",formData.task_time);
 
-      // formData.ampm = formData.ampm || ''; // Ensure ampm is defined
-      // console.log("this is am",formData.ampm);
 
       if (this.data) {
         // Update existing task

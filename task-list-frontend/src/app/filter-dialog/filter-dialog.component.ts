@@ -48,10 +48,6 @@ export class FilterDialogComponent {
     const params = this.buildQueryParams(this.data.column, value);
     this.http.get('/tasks/filter', { params })
       .subscribe(
-        (response) => {
-          console.log('Filtered tasks:', response);
-          // Handle response as needed
-        },
         (error) => {
           console.error('Error filtering tasks:', error);
           // Handle error as needed
