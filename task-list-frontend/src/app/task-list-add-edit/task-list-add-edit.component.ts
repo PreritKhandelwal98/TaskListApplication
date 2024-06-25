@@ -14,7 +14,7 @@ export class TaskListAddEditComponent implements OnInit {
   taskForm: FormGroup;
   taskTypes: string[] = ['call', 'video call', 'meeting'];
   taskTypeIcons: TaskTypeIcons = TASK_TYPE_ICONS; // Use the interface for type safety
-
+  contactPersons: string[] = [];
   constructor(
     private _fb: FormBuilder,
     private _taskService: TaskService,
@@ -35,11 +35,24 @@ export class TaskListAddEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadContactPersons();
+
     if (!this.data) {
       this.setDefaultDateTime();
     } else {
       this.taskForm.patchValue(this.data);
     }
+  }
+  
+  loadContactPersons(): void {
+    this._taskService.getContactPersons().subscribe({
+      next: (persons: string[]) => {
+        this.contactPersons = persons;
+      },
+      error: (err: any) => {
+        console.error('Failed to load contact persons', err);
+      }
+    });
   }
 
   onDateChange(event: any) {

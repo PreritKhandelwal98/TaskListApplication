@@ -52,7 +52,9 @@
 
             <mat-form-field appearance="outline" class="half-width">
                 <mat-label>Contact Person</mat-label>
-                <input matInput type="text" placeholder="Enter contact person" formControlName="contact_person">
+                <mat-select formControlName="contact_person">
+                    <mat-option *ngFor="let person of contactPersons" [value]="person">{{ person }}</mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
 

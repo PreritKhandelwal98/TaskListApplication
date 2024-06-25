@@ -24,7 +24,7 @@ interface GroupedTask {
   providedIn: 'root',
 })
 export class TaskService {
-  private apiUrl = 'https://tasklistapplication.onrender.com//tasks';
+  private apiUrl = 'https://tasklistapplication.onrender.com/tasks';
   constructor(private http: HttpClient) {}
 
   getTasks(): Observable<Task[]> {
@@ -54,8 +54,8 @@ export class TaskService {
     return this.http.put<Task>(url, { status });
   }
 
-  getContactPersons(): Observable<any> {
-    const url = `${this.apiUrl}/contacts`;
-    return this.http.get<any>(url);
+  getContactPersons(): Observable<string[]> {
+    const url = `https://tasklistapplication.onrender.com/contacts`; // Construct the correct URL
+    return this.http.get<string[]>(url);
   }
 }
