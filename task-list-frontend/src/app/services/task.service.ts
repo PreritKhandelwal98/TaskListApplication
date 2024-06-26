@@ -61,7 +61,7 @@ export class TaskService {
   }
 
   updateTaskNote(taskId: string, note: string): Observable<Task> {
-    const url = `http://127.0.0.1:5000/tasks/${taskId}/note`;
+    const url = `https://tasklistapplication.onrender.com/tasks/${taskId}/note`;
     return this.http.put<Task>(url, { note });
   }
 }
