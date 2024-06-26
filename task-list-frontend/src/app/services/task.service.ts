@@ -56,12 +56,12 @@ export class TaskService {
   }
 
   getContactPersons(): Observable<string[]> {
-    const url = `https://tasklistapplication.onrender.com/contacts`; // Construct the correct URL
+    const url = `${this.apiUrl}/contacts`; // Construct the correct URL
     return this.http.get<string[]>(url);
   }
 
   updateTaskNote(taskId: string, note: string): Observable<Task> {
-    const url = `https://tasklistapplication.onrender.com/tasks/${taskId}/note`;
+    const url = `${this.apiUrl}/${taskId}/note`;
     return this.http.put<Task>(url, { note });
   }
 }

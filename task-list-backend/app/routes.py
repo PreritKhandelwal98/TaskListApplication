@@ -138,7 +138,7 @@ def register_routes(app):
             task['_id'] = str(task['_id'])
         return jsonify(tasks)
 
-    @app.route('/contacts', methods=['GET'])
+    @app.route('/tasks/contacts', methods=['GET'])
     def get_contacts():
         print("Fetching contact persons...")
         contacts = list(mongo.db.tasks.find({}, {'contact_person': 1, '_id': 0}))
