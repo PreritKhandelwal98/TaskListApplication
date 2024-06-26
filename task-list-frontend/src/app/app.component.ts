@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
           task.showAddNoteButton = !task.note; // Check if note is null, undefined, or empty
         });
       },
-      error: console.log,
+      error: console.error,
     });
   }
 
@@ -114,7 +114,7 @@ export class AppComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
-      error: console.log,
+      error: console.error,
     });
   }
 
@@ -133,7 +133,7 @@ export class AppComponent implements OnInit {
         this._coreService.openSnackBar('Task status updated!', 'done');
         this.getTaskList();
       },
-      error: console.log,
+      error: console.error,
     });
   }
 
@@ -174,9 +174,6 @@ export class AppComponent implements OnInit {
   }
 
   getShortNote(note: string): string {
-    const maxLength = 30;
-    return note.length > maxLength ? note.substr(0, maxLength) + '...' : note;
+    return note.length > 30 ? note.substr(0, 30) + '...' : note;
   }
-
-  
 }
