@@ -66,12 +66,12 @@ def register_routes(app):
             except ValueError as e:
                 return jsonify({'error': 'Invalid date format'}), 400
 
-    # Validate and parse task_time with AM/PM if provided
-        if 'task_time' in data:
-            try:
-                data['task_time'] = datetime.strptime(data['task_time'], '%I:%M %p').time().strftime('%I:%M %p')
-            except ValueError as e:
-                return jsonify({'error': 'Invalid time format. Must be in HH:MM AM/PM format'}), 400
+    # # Validate and parse task_time with AM/PM if provided
+    #     if 'task_time' in data:
+    #         try:
+    #             data['task_time'] = datetime.strptime(data['task_time'], '%I:%M %p').time().strftime('%I:%M %p')
+    #         except ValueError as e:
+    #             return jsonify({'error': 'Invalid time format. Must be in HH:MM AM/PM format'}), 400
 
         mongo.db.tasks.update_one(
             {'_id': ObjectId(task_id)},
