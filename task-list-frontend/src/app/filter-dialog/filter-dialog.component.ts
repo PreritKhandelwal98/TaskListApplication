@@ -70,7 +70,7 @@ export class FilterDialogComponent {
       selectedTypes.push('meeting');
     }
     if (taskType.videoCall) {
-      selectedTypes.push('Video Call');
+      selectedTypes.push('video call');
     }
     return selectedTypes.join(',');
   }

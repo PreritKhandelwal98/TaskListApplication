@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   dataSource!: MatTableDataSource<Task>;
   activeFilters: { column: string, value: any }[] = [];
   taskTypeIcons: TaskTypeIcons = TASK_TYPE_ICONS; // Use the interface for type safety
+  isNoteExpanded: { [key: string]: boolean } = {}; // Track the expansion state of notes
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -149,5 +150,15 @@ export class AppComponent implements OnInit {
   getTaskTypeIcon(taskType: string): string {
     const lowerCaseTaskType = taskType.toLowerCase() as keyof TaskTypeIcons;
     return this.taskTypeIcons[lowerCaseTaskType] || '';
+  }
+
+  toggleNoteExpansion(taskId: string, event: Event): void {
+    event.preventDefault();
+    this.isNoteExpanded[taskId] = !this.isNoteExpanded[taskId];
+  }
+
+  getShortNote(note: string): string {
+    const maxLength = 30;
+    return note.length > maxLength ? note.substr(0, maxLength) + '...' : note;
   }
 }

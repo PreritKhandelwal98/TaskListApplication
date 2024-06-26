@@ -29,7 +29,7 @@ export class TaskListAddEditComponent implements OnInit {
       task_type: '',
       contact_number: '',
       contact_person: '',
-      notes:'',
+      note:'',
       ampm:''
     });
   }
@@ -113,6 +113,7 @@ export class TaskListAddEditComponent implements OnInit {
         });
       } else {
         // Create new task
+        console.log(formData)
         this._taskService.createTask(formData).subscribe({
           next: () => {
             this._coreService.openSnackBar('Task added successfully');

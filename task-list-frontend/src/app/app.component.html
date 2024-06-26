@@ -83,6 +83,14 @@
           </button>
         </th>
         <td mat-cell *matCellDef="let row">{{ row.note }}</td>
+        <!-- <td mat-cell *matCellDef="let row">
+          <ng-container *ngIf="isNoteExpanded[row._id]; else shortNote">
+            {{ row.note }} <a href="#" (click)="toggleNoteExpansion(row._id, $event)">show less</a>
+          </ng-container>
+          <ng-template #shortNote>
+            {{ getShortNote(row.note) }} <a href="#" (click)="toggleNoteExpansion(row._id, $event)">show more</a>
+          </ng-template>
+        </td> -->
       </ng-container>
 
       <!-- Status Column -->
