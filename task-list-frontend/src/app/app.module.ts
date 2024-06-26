@@ -25,9 +25,10 @@ import { MatMenuModule  } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
+import { AddNoteDialogComponent } from './add-note-dialog/add-note-dialog.component';
 
 @NgModule({
-  declarations: [AppComponent, TaskListAddEditComponent, FilterDialogComponent],
+  declarations: [AppComponent, TaskListAddEditComponent, FilterDialogComponent, AddNoteDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CoreService } from './core/core.service';
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import { TASK_TYPE_ICONS, TaskTypeIcons } from './constants'; // Import task type icons and interface
+import { AddNoteDialogComponent } from './add-note-dialog/add-note-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -60,8 +61,23 @@ export class AppComponent implements OnInit {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
+        this.dataSource.data.forEach(task => {
+          task.showAddNoteButton = !task.note; // Check if note is null, undefined, or empty
+        });
       },
       error: console.log,
+    });
+  }
+
+  addNoteDialog(task: Task): void {
+    const dialogRef = this._dialog.open(AddNoteDialogComponent, {
+      data: { taskId: task._id }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getTaskList(); // Refresh task list after adding note
+      }
     });
   }
 
@@ -161,4 +177,6 @@ export class AppComponent implements OnInit {
     const maxLength = 30;
     return note.length > maxLength ? note.substr(0, maxLength) + '...' : note;
   }
+
+  
 }

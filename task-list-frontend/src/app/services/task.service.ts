@@ -12,6 +12,7 @@ export interface Task {
   contact_person: string;
   note?: string; // note is optional
   status: string;
+  showAddNoteButton: boolean;
 }
 
 interface GroupedTask {
@@ -57,5 +58,10 @@ export class TaskService {
   getContactPersons(): Observable<string[]> {
     const url = `https://tasklistapplication.onrender.com/contacts`; // Construct the correct URL
     return this.http.get<string[]>(url);
+  }
+
+  updateTaskNote(taskId: string, note: string): Observable<Task> {
+    const url = `http://127.0.0.1:5000/tasks/${taskId}/note`;
+    return this.http.put<Task>(url, { note });
   }
 }

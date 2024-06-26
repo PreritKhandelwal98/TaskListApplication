@@ -138,11 +138,30 @@ def register_routes(app):
             task['_id'] = str(task['_id'])
         return jsonify(tasks)
 
-
-
     @app.route('/contacts', methods=['GET'])
     def get_contacts():
         print("Fetching contact persons...")
         contacts = list(mongo.db.tasks.find({}, {'contact_person': 1, '_id': 0}))
         contact_persons = [contact['contact_person'] for contact in contacts]
         return jsonify(contact_persons)
+
+    @app.route('/tasks/<task_id>/note', methods=['PUT'])
+    def update_task_note(task_id):
+        update_task_note
+        data = request.json
+        print(f"Updating note for task with id: {task_id} with data: {data}")
+
+        # Validate and parse note
+        if 'note' not in data or not data['note'].strip():
+            return jsonify({'error': 'Note cannot be empty'}), 400
+
+        mongo.db.tasks.update_one(
+            {'_id': ObjectId(task_id)},
+            {'$set': {'note': data['note']}}
+        )
+        task = mongo.db.tasks.find_one({'_id': ObjectId(task_id)})
+        task['_id'] = str(task['_id'])
+        return jsonify(task)
+    
+    
+        
