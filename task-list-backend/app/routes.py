@@ -32,7 +32,8 @@ def register_routes(app):
             'contact_person': data['contact_person'],
             'note': data.get('notes'),
             'status': 'open',  # Set status to 'open' by default
-            'contact_number':data['contact_number']
+            'contact_number':data['contact_number'],
+            'email':data['email']
         }
 
         mongo.db.tasks.insert_one(task)

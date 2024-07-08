@@ -10,6 +10,7 @@ class Task(db.Model):
     contact_person = db.Column(db.String(80), nullable=False)
     note = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(10), default='open')
+    email = db.Column(db.String(80), nullable=False)
 
     def to_dict(self):
         return {
@@ -20,5 +21,6 @@ class Task(db.Model):
             'task_time': self.task_time.isoformat(),
             'contact_person': self.contact_person,
             'note': self.note,
-            'status': self.status
+            'status': self.status,
+            'email':self.email
         }
