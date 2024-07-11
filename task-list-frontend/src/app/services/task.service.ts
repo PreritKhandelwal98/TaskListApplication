@@ -25,7 +25,7 @@ export interface User {
   providedIn: 'root',
 })
 export class TaskService {
-  private apiUrl = 'https://tasklistapplication.onrender.com/tasks';
+  private apiUrl = 'https://tasklistapplication.onrender.com';
 
   constructor(private http: HttpClient) {}
 
