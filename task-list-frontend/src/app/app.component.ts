@@ -68,6 +68,7 @@ export class AppComponent implements OnInit {
       error: console.error,
     });
   }
+  
 
   addNoteDialog(task: Task): void {
     const dialogRef = this._dialog.open(AddNoteDialogComponent, {

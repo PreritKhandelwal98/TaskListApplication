@@ -2,6 +2,7 @@ from flask import request, jsonify
 from . import mongo
 from bson import ObjectId
 from datetime import datetime
+from .send_email import send_email  # Make sure you have your email sending module
 
 def register_routes(app):
     @app.route('/')
@@ -18,34 +19,56 @@ def register_routes(app):
         try:
             date = datetime.strptime(data['date'], '%Y-%m-%d').date()
         except ValueError as e:
-            return jsonify({'error': 'Invalid date Format'}),400
+            return jsonify({'error': 'Invalid date format'}), 400
         try:
-            task_time = datetime.strptime(data['task_time'], '%I:%M %p').time().strftime('%I:IM %p')
+            task_time = datetime.strptime(data['task_time'], '%I:%M %p').time().strftime('%I:%M %p')
         except ValueError as e:
             return jsonify({'error': 'Invalid time format'}), 400
+
+        # Fetch contact person's email from the database
+        contact_person = mongo.db.users.find_one({'name': data['contact_person']})
+        if not contact_person:
+            return jsonify({'error': 'Contact person not found'}), 400
 
         task = {
             'date': data['date'],  # Store date as ISO formatted string
             'entity_name': data['entity_name'],
             'task_type': data['task_type'],
             'task_time': data['task_time'],  # Store time as ISO formatted string
-            'contact_person': data['contact_person'],
-            'note': data.get('notes'),
+            'contact_person_id': str(contact_person['_id']),
+            'note': data.get('note'),
             'status': 'open',  # Set status to 'open' by default
-            'contact_number':data['contact_number'],
-            'email':data['email']
         }
 
         mongo.db.tasks.insert_one(task)
         task['_id'] = str(task['_id'])
         print(f"Task created: {task}")
+
+        # Send email notification to the contact person
+        subject = f"Task Assigned: {task['task_type']}"
+        message = f"Hello {contact_person['name']},\n\nA new task has been assigned to you:\n\n" \
+                  f"Entity: {task['entity_name']}\n" \
+                  f"Task Type: {task['task_type']}\n" \
+                  f"Date: {task['date']}\n" \
+                  f"Time: {task['task_time']}\n" \
+                  f"Notes: {task['note']}\n\n" \
+                  f"Please complete the task as soon as possible.\n\n" \
+                  f"Best regards,\nYour Task Management System"
+
+        send_email(contact_person['email'], subject, message)
+
         return jsonify(task), 201
 
     @app.route('/tasks', methods=['GET'])
     def get_tasks():
-        print("Fetching tasks...")
         tasks = list(mongo.db.tasks.find())
         for task in tasks:
+            if 'contact_person_id' in task:  # Ensure contact_person_id exists in the task document
+                contact_person = mongo.db.users.find_one({'_id': ObjectId(task['contact_person_id'])})
+                if contact_person:
+                    task['contact_person'] = {'name': contact_person['name']}
+                else:
+                    task['contact_person'] = {'name': 'Unknown'}
             task['_id'] = str(task['_id'])
         return jsonify(tasks)
 
@@ -67,12 +90,12 @@ def register_routes(app):
             except ValueError as e:
                 return jsonify({'error': 'Invalid date format'}), 400
 
-    # # Validate and parse task_time with AM/PM if provided
-    #     if 'task_time' in data:
-    #         try:
-    #             data['task_time'] = datetime.strptime(data['task_time'], '%I:%M %p').time().strftime('%I:%M %p')
-    #         except ValueError as e:
-    #             return jsonify({'error': 'Invalid time format. Must be in HH:MM AM/PM format'}), 400
+        # Validate and parse task_time with AM/PM if provided
+        if 'task_time' in data:
+            try:
+                data['task_time'] = datetime.strptime(data['task_time'], '%I:%M %p').time().strftime('%I:%M %p')
+            except ValueError as e:
+                return jsonify({'error': 'Invalid time format. Must be in HH:MM AM/PM format'}), 400
 
         mongo.db.tasks.update_one(
             {'_id': ObjectId(task_id)},
@@ -115,7 +138,9 @@ def register_routes(app):
         if 'task_type' in query_params:
             filter_criteria['task_type'] = query_params.get('task_type')
         if 'contact_person' in query_params:
-            filter_criteria['contact_person'] = query_params.get('contact_person')
+            contact_person = mongo.db.users.find_one({'name': query_params.get('contact_person')})
+            if contact_person:
+                filter_criteria['contact_person_id'] = str(contact_person['_id'])
         if 'entity_name' in query_params:
             filter_criteria['entity_name'] = query_params.get('entity_name')
 
@@ -142,13 +167,11 @@ def register_routes(app):
     @app.route('/tasks/contacts', methods=['GET'])
     def get_contacts():
         print("Fetching contact persons...")
-        contacts = list(mongo.db.tasks.find({}, {'contact_person': 1, '_id': 0}))
-        contact_persons = [contact['contact_person'] for contact in contacts]
-        return jsonify(contact_persons)
+        contacts = list(mongo.db.users.find({}, {'name': 1, 'email': 1, 'contact_number':1,'_id': 0}))
+        return jsonify(contacts)
 
     @app.route('/tasks/<task_id>/note', methods=['PUT'])
     def update_task_note(task_id):
-        update_task_note
         data = request.json
         print(f"Updating note for task with id: {task_id} with data: {data}")
 
@@ -164,5 +187,20 @@ def register_routes(app):
         task['_id'] = str(task['_id'])
         return jsonify(task)
     
-    
-        
+
+    @app.route('/users', methods=['POST'])
+    def create_user():
+        data = request.json
+        print(f"Received data for user: {data}")
+
+        user = {
+            'name': data['name'],  # Store date as ISO formatted string
+            'email': data['email'],
+            'contact_number': data.get('contact_number')
+        }
+
+        mongo.db.users.insert_one(user)
+        user['_id'] = str(user['_id'])
+        print(f"Task created: {user}")
+
+        return jsonify(user), 201

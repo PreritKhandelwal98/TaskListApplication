@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CoreService } from '../core/core.service';
-import { TaskService, Task } from '../services/task.service';
+import { TaskService, Task,User } from '../services/task.service';
 import { TASK_TYPE_ICONS, TaskTypeIcons } from '../constants'; // Import task type icons and interface
 
 @Component({
@@ -14,7 +14,7 @@ export class TaskListAddEditComponent implements OnInit {
   taskForm: FormGroup;
   taskTypes: string[] = ['call', 'video call', 'meeting'];
   taskTypeIcons: TaskTypeIcons = TASK_TYPE_ICONS; // Use the interface for type safety
-  contactPersons: string[] = [];
+  contactPersons: User[] = []; // Use User interface for contactPersons
   constructor(
     private _fb: FormBuilder,
     private _taskService: TaskService,
@@ -46,7 +46,7 @@ export class TaskListAddEditComponent implements OnInit {
   
   loadContactPersons(): void {
     this._taskService.getContactPersons().subscribe({
-      next: (persons: string[]) => {
+      next: (persons: User[]) => {
         this.contactPersons = persons;
       },
       error: (err: any) => {
@@ -99,7 +99,9 @@ export class TaskListAddEditComponent implements OnInit {
       
       formData.task_time = `${formData.task_time} ${formData.ampm}`;  
 
-
+      // Adjust formData to only include 'name' for 'contact_person'
+      formData.contact_person = this.taskForm.get('contact_person')?.value.name;
+      
       if (this.data) {
         // Update existing task
         this._taskService.updateTask(this.data._id!.toString(), formData).subscribe({

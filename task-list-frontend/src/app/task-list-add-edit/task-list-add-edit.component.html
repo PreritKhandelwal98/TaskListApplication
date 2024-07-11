@@ -53,7 +53,7 @@
             <mat-form-field appearance="outline" class="half-width">
                 <mat-label>Contact Person</mat-label>
                 <mat-select formControlName="contact_person">
-                    <mat-option *ngFor="let person of contactPersons" [value]="person">{{ person }}</mat-option>
+                    <mat-option *ngFor="let person of contactPersons" [value]="person">{{ person.name }}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
